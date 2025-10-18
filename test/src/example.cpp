@@ -172,6 +172,10 @@ bool Example::_property_get_revert(const StringName &p_name, Variant &r_property
 	}
 }
 
+bool Example::_is_valid_property_value(const StringName &p_name, const Variant &p_value, Variant &r_error_message) const {
+	return true;
+}
+
 void Example::_validate_property(PropertyInfo &p_property) const {
 	String name = p_property.name;
 	// Test hiding the "mouse_filter" property from the editor.

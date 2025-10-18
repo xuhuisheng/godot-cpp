@@ -92,6 +92,7 @@ protected:
 	void _get_property_list(List<PropertyInfo> *p_list) const {}
 	bool _property_can_revert(const StringName &p_name) const { return false; }
 	bool _property_get_revert(const StringName &p_name, Variant &r_property) const { return false; }
+	bool _is_valid_property_value(const StringName &p_path, const Variant &p_value, Variant &r_error_message) const { return true; }
 	void _validate_property(PropertyInfo &p_property) const {}
 	String _to_string() const { return "<Wrapped#0>"; }
 
@@ -102,6 +103,8 @@ protected:
 	static void free_property_list_bind(GDExtensionClassInstancePtr p_instance, const GDExtensionPropertyInfo *p_list, uint32_t p_count) {}
 	static GDExtensionBool property_can_revert_bind(GDExtensionClassInstancePtr p_instance, GDExtensionConstStringNamePtr p_name) { return false; }
 	static GDExtensionBool property_get_revert_bind(GDExtensionClassInstancePtr p_instance, GDExtensionConstStringNamePtr p_name, GDExtensionVariantPtr r_ret) { return false; }
+	static GDExtensionBool is_valid_property_value_bind(GDExtensionClassInstancePtr p_instance, GDExtensionConstStringNamePtr p_path, GDExtensionConstVariantPtr p_value,
+		GDExtensionVariantPtr r_error_message) { return true; }
 	static GDExtensionBool validate_property_bind(GDExtensionClassInstancePtr p_instance, GDExtensionPropertyInfo *p_property) { return false; }
 	static void to_string_bind(GDExtensionClassInstancePtr p_instance, GDExtensionBool *r_is_valid, GDExtensionStringPtr r_out) {}
 
@@ -223,6 +226,10 @@ protected:                                                                      
                                                                                                                                                                                        \
 	static bool (::godot::Wrapped::*_get_property_get_revert())(const ::godot::StringName &p_name, ::godot::Variant &) const {                                                         \
 		return (bool (::godot::Wrapped::*)(const ::godot::StringName &p_name, ::godot::Variant &) const) & m_class::_property_get_revert;                                              \
+	}                                                                                                                                                                                  \
+                                                                                                                                                                                       \
+	static bool (::godot::Wrapped::*_get_is_valid_property_value())(const ::godot::StringName &p_path, const ::godot::Variant &p_value, ::godot::Variant &) const {                        \
+		return (bool (::godot::Wrapped::*)(const ::godot::StringName &p_path, const ::godot::Variant &p_value, ::godot::Variant &) const) & m_class::_is_valid_property_value;         \
 	}                                                                                                                                                                                  \
                                                                                                                                                                                        \
 	static void (::godot::Wrapped::*_get_validate_property())(::godot::PropertyInfo & p_property) const {                                                                              \
@@ -352,6 +359,19 @@ public:                                                                         
 		return false;                                                                                                                                                                  \
 	}                                                                                                                                                                                  \
                                                                                                                                                                                        \
+	static GDExtensionBool is_valid_property_value_bind(GDExtensionClassInstancePtr p_instance, GDExtensionConstStringNamePtr p_path,                                                  \
+			GDExtensionConstVariantPtr p_value, GDExtensionVariantPtr r_error_message) {                                                                                               \
+		if (p_instance && m_class::_get_is_valid_property_value()) {                                                                                                                       \
+			if (m_class::_get_is_valid_property_value() != m_inherits::_get_is_valid_property_value()) {                                                                                       \
+				m_class *cls = reinterpret_cast<m_class *>(p_instance);                                                                                                                \
+				return cls->_is_valid_property_value(*reinterpret_cast<const ::godot::StringName *>(p_path),                                                                           \
+					*reinterpret_cast<const ::godot::Variant *>(p_value), *reinterpret_cast<::godot::Variant *>(r_error_message));                                                     \
+			}                                                                                                                                                                          \
+			return m_inherits::is_valid_property_value_bind(p_instance, p_path, p_value, r_error_message);                                                                             \
+		}                                                                                                                                                                              \
+		return false;                                                                                                                                                                  \
+	}                                                                                                                                                                                  \
+                                                                                                                                                                                       \
 	static GDExtensionBool validate_property_bind(GDExtensionClassInstancePtr p_instance, GDExtensionPropertyInfo *p_property) {                                                       \
 		bool ret = false;                                                                                                                                                              \
 		if (p_instance && m_class::_get_validate_property()) {                                                                                                                         \
@@ -449,6 +469,10 @@ protected:                                                                      
 	}                                                                                                                                                                                  \
                                                                                                                                                                                        \
 	static bool (Wrapped::*_get_property_get_revert())(const ::godot::StringName &p_name, Variant &) const {                                                                           \
+		return nullptr;                                                                                                                                                                \
+	}                                                                                                                                                                                  \
+                                                                                                                                                                                       \
+	static bool (Wrapped::*_get_is_valid_property_value())(const ::godot::StringName &p_path, const ::godot::Variant &p_value, Variant &) const {                                          \
 		return nullptr;                                                                                                                                                                \
 	}                                                                                                                                                                                  \
                                                                                                                                                                                        \

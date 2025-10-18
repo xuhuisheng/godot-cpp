@@ -254,6 +254,7 @@ void ClassDB::_register_class(bool p_virtual, bool p_exposed, bool p_runtime) {
 		T::free_property_list_bind, // GDExtensionClassFreePropertyList2 free_property_list_func;
 		T::property_can_revert_bind, // GDExtensionClassPropertyCanRevert property_can_revert_func;
 		T::property_get_revert_bind, // GDExtensionClassPropertyGetRevert property_get_revert_func;
+		T::is_valid_property_value_bind, // GDExtensionClassIsValidPropertyValue is_valid_property_value_func;
 		T::validate_property_bind, // GDExtensionClassValidateProperty validate_property_func;
 		T::notification_bind, // GDExtensionClassNotification2 notification_func;
 		T::to_string_bind, // GDExtensionClassToString to_string_func;
